@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!-- 
+ namespace:命名空間，工程里唯一；指定為接口的全類名
+ resultType:保存結果的java類
+  -->
+<mapper namespace="com.wh.mybatis.mapper.UsersMapper">
+	<select id="selectUser" resultType="users" >
+		select * from users where id = #{id} 
+	</select>
+
+	<!--
+	<select id="selectUser" resultType="users" databaseId="oracle">
+		select * from users where id = #{id}
+	</select>
+	-->
+	<!--
+		useGeneratedKeys = true 返回自增主键
+		keyProperty:指定对应的主键属性，mybatis获取到主键值以后，将其封装给javabean的一个属性
+	-->
+	<insert id="addUser" parameterType="users" useGeneratedKeys="true" keyProperty="id">
+		insert  into users(userName,passWord,user_sex,nick_name)
+			values (#{userName},#{passWord},#{userSex},#{nickName});
+	</insert>
+	<!--
+		oracle不支持自增主键，使用SEQ来代替自增。
+		每次插入数据的主键是从SEQ中得到到，如何获取这个值。
+	-->
+	<insert id="addUserOracle">
+		<!--
+			查出的SEQ封装给javabean的哪个属性
+			order="BEFORE"：当前sql在insert之前执行
+			resultType：返回类型
+			order="AFTER":在insert之后运行，
+		-->
+		<selectKey keyProperty="id" order="BEFORE" resultType="Integer">
+			select userseq.nextval from dual
+		</selectKey>
+		insert  into users(id,userName,passWord,user_sex,nick_name)
+		values (#{id},#{userName},#{passWord},#{userSex},#{nickName});
+	</insert>
+	<update id="updateUser" >
+		update users
+			set username = #{userName},
+				password = #{passWord},
+				user_sex = #{userSex},
+				nick_name = #{nickName}
+			where id = #{id}
+	</update>
+	<delete id="deleteUser">
+		delete from users where id = #{id}
+	</delete>
+
+	<!-- -->
+	<select id="selectUserByIdAndUserName"  resultType="users">
+		select * from users where id = #{id} and userName = #{userName}
+	</select>
+
+	<select id="selectUserByMap" resultType="users">
+		select * from users where id = #{id} and userName = #{userName}
+	</select>
+
+	<!--
+		resultType:如果返回的结果集是一个集合，要写集合中元素的值
+	-->
+	<select id="selectUsersByUserName" resultType="users">
+		select * from users where username = #{username}
+	</select>
+
+	<select id="getUserByIdReturnMap" resultType="map">
+		select * from users where id = #{id}
+	</select>
+	
+	<select id="selectUsersByUserNameReturnMap" resultType="users">
+		select * from users where username = #{username}
+	</select>
+</mapper>
