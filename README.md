@@ -62,11 +62,11 @@ ${}参数的值直接拼装在sql语句中，会有安全问题
 动态生成表明的时候，使用${}
 >select *from ${year}_salary <br/>=> Select *from 2016_salary
 
-######\#{}：更丰富的用法，规定参数的一些规则
+###### \#{}：更丰富的用法，规定参数的一些规则
 在我们的数据为null的时候，有些数据库不能识别mybatis对null的默认处理，比如Oracle
 <br/>JdbcType OTHER:无效的类型，因为mybatis对所有的null都映射的是原生Jdbc的OTHER类型
 <br/>由于全局配置中：jdbcTypeForNull=OTHER，oracle不支持
-<br/> 解决方法
+<br/> ※解决方法
 + 1.\#{email,jdbcType=NULL}
 + 2.jdbcTypeForNull=NULL (mysql和oracle都支持)
     mybatis-config.xml <setting name=”jdbcTypeForNull” value=”NULL”/>
