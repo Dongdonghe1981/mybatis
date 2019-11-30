@@ -30,3 +30,13 @@
 /#{属性名}：取出传入的POJO的属性值
 5.	Map<br/>如果没有对应的POJO，可以传入Map
 6.	TO<br/>如果方法频繁掉用，可以定义TO（Transfer Object）数据传输对象
+
+##### 例：
+>Public Employee getEmp(@Param(“id”)Integer id,String lastName)
+* 参数处理：id => #{id/param1} lastName=>#{param2}
+>Public Employee getEmp(Integer id,@Param(“e”)Employee emp)
+* 参数处理：id=>#{param1} lastName=>#{param2.lastName/e.lastName}
+如果是Collection(List,Set)类型或者是数组，把传入的list或者数组封装在map中。
+<br/>Key:Collection(collection)，key(list),数组(array)
+>Public Employee getEmp(List<Integer>ids)
+* 参数处理：取出第一个id的值：#{list[0]}
