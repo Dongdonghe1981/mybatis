@@ -14,4 +14,19 @@
 5.	两个重要的配置文件
     * mybatis的全局配置文件，包含数据库连接池信息，事务管理器信息等
     * sql映射文件，保存每一个sql语句的映射信息
-
+### mybatis参数处理	
+1.	单个参数：<br/>mybatis不会做特殊处理，#{参数名}:就可以取出参数值
+2.	多个参数：<br/>mybatis会做特殊处理，多个参数会被封装成一个map, 
+        + Key：param1…paramN,（或者arg1..argN也可以）
+        + Value:传入参数的值
+		\#{}就是从map里获取指定的key值。
+3.	使用命名参数：
+<br/>明确指定封装参数值时map的key
+		+ key：使用@Param注解指定的值
+		+ value：参数值
+>selectUserByIdAndUserName(@Param("id") Integer id, 
+@Param("userName") String userName);
+4.	POJO<br/>如果多个参数正好是POJO，可以直接传入。
+/#{属性名}：取出传入的POJO的属性值
+5.	Map<br/>如果没有对应的POJO，可以传入Map
+6.	TO<br/>如果方法频繁掉用，可以定义TO（Transfer Object）数据传输对象
