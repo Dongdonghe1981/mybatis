@@ -15,7 +15,7 @@ public interface UsersMapper {
 	//多条记录封装成一个map,Map<Integer,Users>,key是主键，值是Bean
 	@MapKey("id")//设定Bean的哪个属性作为key
 	Map<Integer,Users> selectUsersByUserNameReturnMap(String userName);
-	//返回一条记录的map,key是列名
+	//返回一条记录的map,key是列名，value是值
 	Map<String,Object> getUserByIdReturnMap(Integer id);
 	List<Users> selectUsersByUserName(String userName);
 	Users selectUserByMap(Map<String,Object> map);
