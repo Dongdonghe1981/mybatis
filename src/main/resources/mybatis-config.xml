@@ -13,6 +13,10 @@
 	<settings>
 		<!--驼峰命名规则映射-->
 		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<!-- 延迟加载 -->
+		<setting name="lazyLoadingEnabled" value="true"/>
+		<!-- 侵入延迟加载 -->
+		<setting name="aggressiveLazyLoading" value="false"/>
 	</settings>
 
 
@@ -97,6 +101,8 @@
 	-->
 	<mappers>
 		<mapper resource="mapper/UsersMapper.xml"/>
+		<mapper resource="mapper/UsersMapperPlus.xml"/>
+		<mapper resource="mapper/DepartmentMapper.xml"/>
 		<!--<mapper class="com.wh.mybatis.mapper.UsersMapperAnnotation"/>-->
 		<!--批量注册-->
 		<!--<package name="com.wh.mybatis.mapper"/>-->

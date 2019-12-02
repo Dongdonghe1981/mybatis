@@ -3,4 +3,84 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wh.mybatis.mapper.UsersMapperPlus">
 
+
+    <!--
+        resultMap:自定义结果集映射规则
+        自定义某个javabean的封装规则
+        type:自定义规则的java类型
+        id:唯一id,方便引用
+    -->
+    <resultMap id="MyUser" type="com.wh.mybatis.dto.Users">
+        <!--指定主键的封装规则，也可以不使用id定义主键，推荐使用的话-->
+        <id column="id" property="id"/>
+        <!--定义普通列封装规则 -->
+        <result column="userName" property="userName"/>
+        <result column="passWord" property="passWord"/>
+        <result column="user_sex" property="userSex"/>
+        <result column="nick_name" property="nickName"/>
+    </resultMap>
+    <select id="getUserById" resultMap="MyUser">
+        select * from users where id = #{id}
+    </select>
+
+    <!--
+        联合查询：级联属性封装结果
+    -->
+    <resultMap id="MyUser2" type="com.wh.mybatis.dto.Users">
+        <id property="id" column="id"/>
+        <result column="userName" property="userName"/>
+        <result column="did" property="department.id"/>
+        <result column="deptName" property="department.departmentName"/>
+    </resultMap>
+    <!--
+    使用association：可以指定联合的javabean对象
+    property：指定该javabean哪个属性是级联对象
+    javaType：指定这个属性的java对象类型
+    -->
+    <resultMap id="MyUser3" type="com.wh.mybatis.dto.Users">
+        <id property="id" column="id"/>
+        <result column="userName" property="userName"/>
+        <association property="department" javaType="com.wh.mybatis.dto.Department">
+            <id column="did" property="id"/>
+            <result column="deptName" property="departmentName"/>
+        </association>
+    </resultMap>
+    <select id="getUserAndDept" resultMap="MyUser3">
+        select u.id id,u.userName userName,d.id did,d.dept_name deptName
+          from users u,department d
+         where u.dept_id = d.id
+           and u.id =#{id};
+    </select>
+
+    <!--
+        使用association进行分步查询
+        1，先按照用户id查询用户信息
+        2，根据查询用户信息中的d_id值去部门表查部门信息
+        3. 将部门设置到用户信息中
+    -->
+    <resultMap id="MyUser4" type="com.wh.mybatis.dto.Users">
+        <id property="id" column="id"/>
+        <result column="userName" property="userName"/>
+        <!--
+            select：当前属性是调用select指定的方法查出的结果
+            column: 指定将哪列的值传给该方法
+         -->
+        <association property="department"
+                     select="com.wh.mybatis.mapper.DepartmentMapper.getDeptById"
+                     column="dept_id">
+        </association>
+    </resultMap>
+    <select id="getUserByIdStep" resultMap="MyUser4">
+        select * from users where id = #{id}
+    </select>
+
+    <!--
+        可以使用延迟加载()
+        部门信息在使用的时候才进行查询，否则不查询
+        在分步查询的基础上加上两个配置
+		1.延迟加载
+        setting name="lazyLoadingEnabled" value="true"
+        2.侵入延迟加载
+        setting name="aggressiveLazyLoading" value="false"
+    -->
 </mapper>

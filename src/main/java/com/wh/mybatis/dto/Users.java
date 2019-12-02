@@ -9,6 +9,7 @@ public class Users {
 	private String passWord;
 	private String userSex;
 	private String nickName;
+	private Department department;
 
 	public Integer getId() {
 		return id;
@@ -41,6 +42,14 @@ public class Users {
 	}
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 	public Users() {
