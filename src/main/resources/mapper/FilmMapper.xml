@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wh.mybatis.mapper.FilmMapper">
+  <resultMap id="BaseResultMap" type="com.wh.mybatis.dto.Film">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="film_id" jdbcType="SMALLINT" property="filmId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="release_year" jdbcType="DATE" property="releaseYear" />
+    <result column="language_id" jdbcType="TINYINT" property="languageId" />
+    <result column="original_language_id" jdbcType="TINYINT" property="originalLanguageId" />
+    <result column="rental_duration" jdbcType="TINYINT" property="rentalDuration" />
+    <result column="rental_rate" jdbcType="DECIMAL" property="rentalRate" />
+    <result column="length" jdbcType="SMALLINT" property="length" />
+    <result column="replacement_cost" jdbcType="DECIMAL" property="replacementCost" />
+    <result column="rating" jdbcType="CHAR" property="rating" />
+    <result column="special_features" jdbcType="CHAR" property="specialFeatures" />
+    <result column="last_update" jdbcType="TIMESTAMP" property="lastUpdate" />
+    <result column="description" jdbcType="LONGVARCHAR" property="description" />
+  </resultMap>
+
+  <!-- 支持OGNL表达式-->
+  <select id="getFilm" resultType="com.wh.mybatis.dto.Film">
+    <!--
+    1. where 1=1
+    2. 使用where 标签，只会去掉第一个and
+    -->
+    select * from film
+    <where>
+      <if test="filmId != null">and film_id = #{filmId}</if>
+      <if test="title != null &amp;&amp; title != &quot;&quot;">and title like #{title}</if>
+      <if test="rating !=null and rating.trim() != ''"> and rating = #{rating}</if>
+    </where>
+  </select>
+
+  <!--
+  prefix=""
+  prefixOverrides=""
+  suffix=""
+  suffixOverrides=""
+  -->
+  <select id="getFilmTrim" resultType="com.wh.mybatis.dto.Film">
+    select * from film
+    <trim >
+      <if test="filmId != null">film_id = #{filmId} and</if>
+      <if test="title != null &amp;&amp; title != &quot;&quot;"> title like #{title} and</if>
+      <if test="rating !=null and rating.trim() != ''"> and rating = #{rating}</if>
+    </trim>
+  </select>
+</mapper>

@@ -7,5 +7,5 @@ public interface UsersMapperPlus {
     Users getUserById(Integer id);
     Users getUserAndDept(Integer id);
     Users getUserByIdStep(Integer id);
-
+    Users getUserByIdDis(Integer id);
 }
