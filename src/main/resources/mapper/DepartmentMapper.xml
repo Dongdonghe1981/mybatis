@@ -16,12 +16,12 @@
         -->
         <collection property="users" ofType="com.wh.mybatis.dto.Users">
             <!-- 定义这个集合中元素的封装规则-->
-            <id  column="eid" property="id"/>
+            <id  column="uid" property="id"/>
             <result column="userName" property="userName"/>
         </collection>
     </resultMap>
     <select id="getDeptByIdPlus" resultMap="MyDepart">
-        select u.id eid,u.userName,d.id did,d.dept_name
+        select u.id uid,u.userName,d.id did,d.dept_name
         from department d
         left join users u on
         u.dept_id = d.id

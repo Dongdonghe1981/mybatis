@@ -82,4 +82,25 @@
         2.侵入延迟加载
         setting name="aggressiveLazyLoading" value="false"
     -->
+
+    <!-- discriminator 鉴别器，判断某列的值，然后改变封装行为-->
+    <resultMap id="MyDis" type="users">
+        <result column="userName" property="userName"/>
+        <result column="passWord" property="passWord"/>
+        <result column="user_sex" property="userSex"/>
+        <result column="nick_name" property="nickName"/>
+        <discriminator javaType="string" column="user_sex">
+            <case value="boy" resultType="users"></case>
+            <case value="girl" resultType="users">
+                <association property="department"
+                             select="com.wh.mybatis.mapper.DepartmentMapper.getDeptById"
+                             column="dept_id">
+                </association>
+            </case>
+        </discriminator>
+    </resultMap>
+    <select id="getUserByIdDis" resultMap="MyDis">
+        select * from users where id = #{id}
+    </select>
+
 </mapper>
