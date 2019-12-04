@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.wh.mybatis.mapper.UsersMapperAnnotation;
+import com.wh.mybatis.mapper.UsersMapperPlus;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -136,6 +137,18 @@ public class MyBatisTest {
 			UsersMapper mapper = openSession.getMapper(UsersMapper.class);
 			Map<Integer,Users> result = mapper.selectUsersByUserNameReturnMap("user1");
 			result.forEach((k,v)-> System.out.println(k+":"+v));
+		}
+	}
+
+	@Test
+	public  void test10() throws IOException {
+		SqlSessionFactory sqlSessionFactory = this.getSqlSessionFactory();
+
+		try(SqlSession openSession = sqlSessionFactory.openSession(true)) {
+			UsersMapperPlus mapper = openSession.getMapper(UsersMapperPlus.class);
+			Users u = mapper.getUserByIdDis(1);
+			System.out.println(u);
+			System.out.println(u.getDepartment());
 		}
 	}
 
