@@ -5,4 +5,43 @@
     <select id="getDeptById" resultType="com.wh.mybatis.dto.Department">
         select id,dept_name departmentName from department where id = #{id}
     </select>
+
+    <resultMap id="MyDepart" type="com.wh.mybatis.dto.Department">
+        <id column="did" property="id"/>
+        <result column="dept_name" property="departmentName"/>
+        <!--
+            嵌套结果集
+            collection 定义集合类型属性的封装
+            ofType:指定集合里元素的类型
+        -->
+        <collection property="users" ofType="com.wh.mybatis.dto.Users">
+            <!-- 定义这个集合中元素的封装规则-->
+            <id  column="eid" property="id"/>
+            <result column="userName" property="userName"/>
+        </collection>
+    </resultMap>
+    <select id="getDeptByIdPlus" resultMap="MyDepart">
+        select u.id eid,u.userName,d.id did,d.dept_name
+        from department d
+        left join users u on
+        u.dept_id = d.id
+        and d.id = #{id}
+    </select>
+
+    <resultMap id="MyDepartStep" type="com.wh.mybatis.dto.Department">
+        <id column="did" property="id"/>
+        <result column="dept_name" property="departmentName"/>
+        <collection
+                select="com.wh.mybatis.mapper.UsersMapper.getUsersByDepartId"
+                property="users"
+                column="{deptId=id}" fetchType="lazy">
+            <!-- 传递多个列column={key1=column1,key2=column2} -->
+            <!-- fetchType="lazy" 开启延迟加载;eager:立即加载-->
+        </collection>
+    </resultMap>
+    <select id="getDeptByIdStep" resultMap="MyDepartStep">
+        select * from department where id = #{id}
+    </select>
+
+
 </mapper>

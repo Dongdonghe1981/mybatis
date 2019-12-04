@@ -1,8 +1,19 @@
 package com.wh.mybatis.dto;
 
+import java.util.List;
+
 public class Department {
     private Integer id;
     private String departmentName;
+    private List<Users> users;
+
+    public List<Users> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<Users> users) {
+        this.users = users;
+    }
 
     public Integer getId() {
         return id;

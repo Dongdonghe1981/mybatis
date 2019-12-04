@@ -24,5 +24,6 @@ public interface UsersMapper {
 	Integer addUser(Users u);
 	Integer updateUser(Users u);
 	Integer deleteUser(Integer id);
+	List<Users> getUsersByDepartId(Integer deptId);
 
 }

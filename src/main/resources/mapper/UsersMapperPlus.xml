@@ -3,7 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wh.mybatis.mapper.UsersMapperPlus">
 
-
     <!--
         resultMap:自定义结果集映射规则
         自定义某个javabean的封装规则
