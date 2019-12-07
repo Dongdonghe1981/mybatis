@@ -71,4 +71,55 @@ ${}参数的值直接拼装在sql语句中，会有安全问题
 + 2.jdbcTypeForNull=NULL (mysql和oracle都支持)
     mybatis-config.xml <setting name=”jdbcTypeForNull” value=”NULL”/>
 
+### 缓存
+#### 一级缓存（本地缓存）和二级缓存（全局缓存）
+1.默认情况下，只有一级缓存（SqlSession级别的缓存，也称为本地缓存）开启
+  与数据库`同一次会话`期间查询到的数据，会放到本地缓存中，以后的数据如果需要获取相同的数据，
+  直接可以从缓存中获取。一级缓存是存储在sqlSession的一个Map中  
+  一级缓存失效情况  
+  +  SqlSession不同
+  +  SqlSession相同，查询条件不同
+  +  SqlSession相同，先查getAll，再查getOne
+  +  SqlSession相同，两次之间执行了增删改操作（即使不是对缓存中相同的记录）
+  （因为这次操作，可能修改缓存数据）  
+  +  缓存数据清空openSession.clearCache();
+   
+2.二级缓存需要手动开启和配置，它是基于NameSpace级别的缓存  
+  工作机制
+  +  一个会话：查询一条数据，这个数据就会被放到当前会话的一级缓存中，如果会话关闭，一级缓存
+  中的数据会被保存到二级缓存中，新的会话查询时，就可以参照二级缓存  
+  
+  步骤
+  1. 开启全局二级缓存配置<setting name="cacheEnabled" value="true"/>
+  2. 在各个mapper.xml文件中配置  
+  ```
+  <cache eviction="" flushInterval="" readOnly="" size="" type=""></cache>
+  ```  
+  +  eviction：缓存的回收策略（默认是LRU）  
+        +  LRU：最近最少使用的，移除最长时间不被使用的对象
+        +  FIFO:先进先出，按照对象进入缓存的顺序来移除
+        +  SOFT：软引用，移除基于垃圾回收器状态和软引用规则的对象
+        +  WEAK：弱引用，更积极的移除基于垃圾回收器状态和软引用规则的对象
     
+  +  flushInterval：缓存刷新间隔，缓存多长时间清空一次，默认不清空，设置一个毫秒值
+  +  readOnly：缓存是否只读，默认false
+        +  true：只读，mybatis认为所有从缓存中获取数据的操作都是只读操作，不会修改数据，为了加快获取数据，不安全，速度快
+        +  false：非只读，mybatis认为获取的数据可能会被修改。mybatis会利用反序列化克隆一份新的数据给用户。安全，速度慢
+  +  size：缓存中存放多少元素
+  +  type：指定自定义缓存的全类名，实现Cache接口的类  
+  
+  3. POJO实现反序列化接口  
+`查询的数据都会默认放到一级缓存中，只有会话关闭，一级缓存中的数据，才会转移到二级缓存中`
+  
+3.为了提高扩展性，MyBatis定义了缓存接口Cache。可以通过实现Cache接口来自定义二级缓存
+
+#### 和缓存相关的配置
+1. 全局`cacheEnabled=false`:关闭二级缓存，不影响一级缓存
+2. 每个select都有一个`useCache`,默认是true  
+   false：关闭二级缓存，不影响一级缓存
+3. 每个增删改标签的flushCache="true",操作完成后清除一级和二级缓存，包括`<select>`
+4. `sqlSession.clearCache()`只清除一级缓存，不清除二级缓存。
+5.  全局localCacheScope,一级（本地）缓存作用域，当前会话的所有数据保存在会话缓存中。  
+   STATEMENT：可以禁用一级缓存。
+#### 缓存的使用顺序
+先匹配二级缓存，在匹配一级缓存，如果都没匹配上，再查询DB
