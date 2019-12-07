@@ -6,6 +6,10 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface FilmMapper{
+
+     Film getFilmById(short id);
+     List<Film> getAllFilm();
+
      List<Film> getFilm(Film film);
 
      List<Film> getFilmTrim(Film film);

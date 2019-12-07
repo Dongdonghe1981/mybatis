@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wh.mybatis.mapper.FilmMapper">
+
+  <!--
+  eviction
+  -->
+  <cache eviction="FIFO" flushInterval="6000" readOnly="false" size="100" type="net.sf.ehcache.Ehcache"></cache>
+
   <resultMap id="BaseResultMap" type="com.wh.mybatis.dto.Film">
     <!--
       WARNING - @mbg.generated
@@ -144,4 +150,12 @@
   <sql id="refColumn">
     title,language_id,rental_duration,rental_rate,replacement_cost
   </sql>
+
+  <select id="getFilmById" resultType="com.wh.mybatis.dto.Film">
+    select * from film where film_id = #{filmId}
+  </select>
+
+  <select id="getAllFilm"  resultType="com.wh.mybatis.dto.Film">
+    select * from film
+  </select>
 </mapper>
