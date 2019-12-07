@@ -9,6 +9,7 @@ public class Film {
     @Column(name = "film_id")
     private Short filmId;
 
+    @Column(name = "title")
     private String title;
 
     @Column(name = "release_year")
@@ -221,6 +222,19 @@ public class Film {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Film() {
+    }
+
+    public Film(String title,
+                Byte languageId, Byte rentalDuration,
+                BigDecimal rentalRate,BigDecimal replacementCost) {
+        this.title = title;
+        this.languageId = languageId;
+        this.rentalDuration = rentalDuration;
+        this.rentalRate = rentalRate;
+        this.replacementCost = replacementCost;
     }
 
     @Override
